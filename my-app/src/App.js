@@ -57,10 +57,10 @@ function Content() {
   
   useEffect(() => {
     if(lastMessage !== null) {
-      const msg = JSON.parse(lastMessage)
-      var history = messageLog
-      history.push(msg)
-      setMessageLog(history)
+      // const msg = JSON.parse(lastMessage)
+      // var history = messageLog
+      // history.push(msg)
+      // setMessageLog(history)
     }
   }, [lastMessage])
 

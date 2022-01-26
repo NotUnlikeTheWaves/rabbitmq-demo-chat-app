@@ -41,6 +41,7 @@ function Content() {
     setNaam(event.target.value)
   }
 
+  const [messageLog, setMessageLog] = React.useState([])
 
 
   const {
@@ -53,6 +54,15 @@ function Content() {
   const sendMessageToEveryone = () => {
     sendMessage(JSON.stringify({username: naam, bericht: bericht}))
   }
+  
+  useEffect(() => {
+    if(lastMessage !== null) {
+      const msg = JSON.parse(lastMessage)
+      var history = messageLog
+      history.push(msg)
+      setMessageLog(history)
+    }
+  }, [lastMessage])
 
   return (
     <div className="App">

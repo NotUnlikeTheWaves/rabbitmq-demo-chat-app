@@ -10,6 +10,7 @@ const wss = new WebSocket.WebSocketServer(
 
 const exchangeName = 'amq.fanout'
 
+// Maak een verbinding
 var open = require('amqplib').connect('amqp://localhost');
 
 var channel = null
@@ -22,32 +23,34 @@ open.then(function(conn){
     channel = ch
 })
 
+// Nieuwe client van de chat app
 wss.on('connection', function connection(ws) {
+  // genereer een willekeurig ID voor de queue
   const rand = Math.random() * 100000000
   ws.id = rand
+  // Dit stuk regelt de POST van de gebruiker
   ws.on('message', function message(data) {
+      // Bericht komt binnen van de gebruiker om naar iedereen te sturen
     console.log('received: %s (%i)\n', data, ws.id);
     channel.publish(exchangeName, '', data)
   });
 
-  console.log("setting up queue")
+  // Dit stuk regelt het terugsturen van berichten naar de client
   if(channel !== null) {
-    console.log("assert queue")
+      // Creeer een queue als een nieuwe client aanmeld
     const queueName = `chat-client-${ws.id}`
     channel.assertQueue(queueName, {
         autoDelete: true,
         durable: false
     }).then((ok) => {
-        console.log("bind queue")
+        // Bind de queue aan de exchange
         channel.bindQueue(queueName, exchangeName, '')
     }).then((ok) => {
+        // Maak een functie die aangeroepen wordt als we een bericht consumeren uit de queue
         channel.consume(queueName, (message) => {
-            console.log("send to ws:")
-            console.log(message.content)
-            console.log(JSON.parse(message.content))
             ws.send(JSON.stringify(JSON.parse(message.content)))
         })
     })
   }
-  console.log("connection gained lmao")
+  console.log(`connection started with ID ${ws.id}`)
 });

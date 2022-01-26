@@ -1,4 +1,4 @@
-# Demo chat app for RabbitMQ
+# Demo chat app for RabbitMQ in React/Node
 
 In this repository is a setup to create a very simple chat app using RabbitMQ with a fanout exchange to facilitate a chat app. Clients create a queue and bind it to the default fanout exchange on 
 

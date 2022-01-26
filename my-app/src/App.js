@@ -4,6 +4,8 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Textarea, Container, Flex, Button, Box, Input } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react';
 
+import useWebSocket, { ReadyState } from 'react-use-websocket';
+
 import {
   Table,
   Thead,
@@ -39,6 +41,18 @@ function Content() {
     setNaam(event.target.value)
   }
 
+
+
+  const {
+    sendMessage,
+    lastMessage,
+    readyState,
+  } = useWebSocket('ws://localhost:10101', 'echo-protocol')
+
+
+  const sendMessageToEveryone = () => {
+    sendMessage(JSON.stringify({username: naam, bericht: bericht}))
+  }
 
   return (
     <div className="App">
@@ -79,7 +93,7 @@ function Content() {
               value={bericht}
               onChange={handleSetBericht}
             />
-            <Button>
+            <Button onClick={() => sendMessageToEveryone()}>
               Verstuur
             </Button>
           </Flex>

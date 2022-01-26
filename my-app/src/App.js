@@ -48,21 +48,20 @@ function Content() {
     sendMessage,
     lastMessage,
     readyState,
-  } = useWebSocket('ws://localhost:10101', 'echo-protocol')
+  } = useWebSocket('ws://localhost:10101', {
+    onMessage: (message) => {
+      const msg = JSON.parse(message.data)
+      console.log(msg)
+      var history = messageLog
+      history.push(msg)
+      setMessageLog(history)
+    }
+  })
 
 
   const sendMessageToEveryone = () => {
     sendMessage(JSON.stringify({username: naam, bericht: bericht}))
   }
-  
-  useEffect(() => {
-    if(lastMessage !== null) {
-      // const msg = JSON.parse(lastMessage)
-      // var history = messageLog
-      // history.push(msg)
-      // setMessageLog(history)
-    }
-  }, [lastMessage])
 
   return (
     <div className="App">
@@ -73,7 +72,7 @@ function Content() {
         <Input maxW='200px' placeholder='Naam' value={naam} onChange={handleSetNaam} />
         <Box  maxW='container.sm' minW='container.sm' my='50px' border='1px' borderRadius='md'>
           
-        <Table variant='striped' colorScheme='teal'>
+        <Table fontSize='18px' variant='striped' colorScheme='black'>
           <Thead>
             <Tr>
               <Th>Van</Th>
@@ -81,18 +80,16 @@ function Content() {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
+            {messageLog.map((message, index) => 
+            <Tr key={index}>
+              <Td>{message.username}</Td>
+              <Td>{message.bericht}</Td>
+            </Tr>)
+            }
+            {/* <Tr>
               <Td>inches</Td>
               <Td>millimetresffffffffffffffffffffffffffffffffffff (mm)</Td>
-            </Tr>
-            <Tr>
-              <Td>feet</Td>
-              <Td>centimetres (cm)</Td>
-            </Tr>
-            <Tr>
-              <Td>yards</Td>
-              <Td>metres (m)</Td>
-            </Tr>
+            </Tr> */}
           </Tbody>
         </Table>
         </Box>

@@ -32,12 +32,10 @@ export default App;
 function Content() {
   const [bericht, setBericht] = React.useState('')
   const handleSetBericht = (event) => {
-    // console.log(event.target.value)
     setBericht(event.target.value)
   }
   const [naam, setNaam] = React.useState('TestMan')
   const handleSetNaam = (event) => {
-    // console.log(event.target.value)
     setNaam(event.target.value)
   }
 
@@ -51,7 +49,6 @@ function Content() {
   } = useWebSocket('ws://localhost:10101', {
     onMessage: (message) => {
       const msg = JSON.parse(message.data)
-      console.log(msg)
       var history = messageLog
       history.push(msg)
       setMessageLog(history)
@@ -86,10 +83,6 @@ function Content() {
               <Td>{message.bericht}</Td>
             </Tr>)
             }
-            {/* <Tr>
-              <Td>inches</Td>
-              <Td>millimetresffffffffffffffffffffffffffffffffffff (mm)</Td>
-            </Tr> */}
           </Tbody>
         </Table>
         </Box>
